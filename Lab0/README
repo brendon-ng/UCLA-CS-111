@@ -1,0 +1,38 @@
+NAME: Brendon Ng
+EMAIL: brendonn8@gmail.com
+ID: 304925492
+
+Description of Included Files
+
+lab.c:
+	The C source code file to be compiled to complete the specified tasks
+	by default, it copies from stdin to stdout but with --input and
+	--output arguments you can change it to read from a certain file or
+	write/create a file. You also have the option of forcing a segmentation
+	fault and deciding how it is handled.
+
+Makefile:
+	A file that specifies the targets to run when you call `make`. Compiles
+	lab.c into an executable by default, also runs a smoke check to check
+	baseline functionality of the code. Cleans the director of any
+	executables and also creates the tar file containing all files to be
+	submitted.
+
+README:
+	This file
+
+backtrace.png
+	A screenshot of the stack at the point of the forced segmentation fault
+
+breakpoint.png
+	A confirmation that the variable used to create the segmentation fault
+	is indeed NULL.
+
+
+Smoke Test Cases
+      Checking normal operation with no arguments - returns 0
+      checking normal operation with --input - returns 0
+      checking normal operation with --output - returns 0
+      checking operation with --segfault - returns 139
+      checking operation with --segfault --catch - returns 4
+
