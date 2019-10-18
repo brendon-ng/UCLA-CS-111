@@ -1,0 +1,27 @@
+NAME: Brendon Ng
+EMAIL: brendonn8@gmail.com
+ID: 304925492
+
+Descrition of Files:
+
+lab1b.c:
+	The C source code file to be compiled to complete the specified tasks
+	It opens files specified by --rdonly and --wronly and is able to perform
+	shell commands given with the --command option and the user is able to
+	specify the files to be assigned to stdin, stdout, and stderr.
+
+Makefile:
+	A file that specifies the targets to run when you call `make`. Compiles
+	lab1a.c into an executable by default, also runs test cases to check
+	baseline functionality of the code. Cleans the directory of any
+	executables and also creates the tar file containing all files to be
+	submitted.
+
+README:
+	This file
+
+
+Known Limitations:
+      The command option relies on the user implementing the arguments correctly
+      If the first three arguments cannot be cast to integers then the program
+      will sometimes return an error and sometimes will not.
