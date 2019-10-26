@@ -6,3 +6,5 @@ Lab1a/sanity_script.sh
 Lab1a/simpsh
 Lab1b/sanity_script.sh
 Lab1b/simpsh
+Lab1c/*.txt
+Lab1c/*.sh
