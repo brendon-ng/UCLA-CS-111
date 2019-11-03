@@ -69,7 +69,7 @@ void unlock(){
 void threadfunc(void* i){
   int index = *((int*)i);
   
-  for(int j=index; j<iterations; j++){
+  for(int j=index; j<index+iterations; j++){
     lock();
     SortedList_insert(list, &elements[index+j]);
     unlock();
@@ -83,7 +83,7 @@ void threadfunc(void* i){
   }
   unlock();
 
-  for(int j=index; j<iterations; j++){
+  for(int j=index; j<index+iterations; j++){
     lock();
     SortedListElement_t* toDelete = SortedList_lookup(list, elements[j].key);
     unlock();
@@ -238,7 +238,7 @@ int main(int argc, char* argv[]){
 
   int ops = threads*iterations*3;
   long long run_time = end - start;
-  long long avg = ops/run_time;
+  long long avg = run_time/ops;
   printf("list-%s-%s,%d,%d,%d,%d,%lld,%lld\n",
 	 yieldstr,syncstr,threads,iterations,1,ops,run_time,avg);
   fflush(stdout);

@@ -3,6 +3,9 @@ EMAIL: brendonn8@gmail.com
 ID: 304925492
 
 
+Description of Files:
+
+
 
 Question 2.1.1 - causing conflicts:
 It takes many iterations before errors are seen becaue there has to be enough
@@ -34,4 +37,12 @@ so the operations slow down as theads rise.
 
 Question 2.2.1 - scalability of Mutex
 In both, the time per mutex-protected operation is positiviely correlasted with
-the number of theads. But with lists, it increases at a faster rate.
+the number of theads. But with lists, it increases at a faster rate. My graph
+shows a decreasing function for list but I am aware it is not supposed to.
+
+Question 2.2.2 - scalability of spin locks
+Time per protected operation is positively correlated with number of threads
+for list operations. The time per protected op increases faster for spin locks
+than mutex. This is because mutex threads go to sleep and wait for a lock while
+spin locks keep spinning, adding overhead. This is why both graphs increase
+but spin locks increase faster.
