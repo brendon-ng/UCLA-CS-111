@@ -1,0 +1,37 @@
+NAME: Brendon Ng
+EMAIL: brendonn8@gmail.com
+ID: 304925492
+
+
+
+Question 2.1.1 - causing conflicts:
+It takes many iterations before errors are seen becaue there has to be enough
+iterations to take up multiple threads. If there are not enough iterations,
+only one thread will be used so threads are not stepping on each other's
+toes, even if we initialize more than one thread.
+
+Question 2.1.2 - cost of yielding:
+Yield runs are slower because threads are constantly giving up the CPU causing
+more context switches. These switches slow down the program and add time to the
+process. The additional time is used hault a thread, save its state, load
+another thread's state and restart that new thread. It is not possible to get
+valid per-operation timings if we use --yield because the time used for context
+switches would be in the total time and therefore would cause noise in seeing
+true per-operation times.
+
+Question 2.1.3 - measurement errors:
+The average cost per operations drops with increasing iterations because the
+average cost per operation is a function of the total time of the program which
+encompasses the time to create the threads which is a very heavy operation.
+The more iterations we have, the more it dilutes this operation and the less
+significance this operation has.
+
+Question 2.1.4 - costs of serialization:
+At low thread values, the options perform similarly because the cost of
+blocking is smaller because there are less threads to wait for. As theads
+increase, the amount of time you have to wait at a critical section increases
+so the operations slow down as theads rise.
+
+Question 2.2.1 - scalability of Mutex
+In both, the time per mutex-protected operation is positiviely correlasted with
+the number of theads. But with lists, it increases at a faster rate.

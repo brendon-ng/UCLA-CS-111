@@ -1,0 +1,23 @@
+#!/bin/bash
+
+rm -f lab2_list.csv
+touch lab2_list.csv
+
+for t in 10,100,1000,10000,20000
+do
+    ./lab2_list --iterations=$t >> lab2_list.csv
+done
+
+for t in 2,4,8,12
+do
+    for i in 1,10,100,1000
+    do
+	for y in "i", "d", "l", "id", "il", "dl", "idl"
+	do
+	    ./lab2_list --iterations=$i --threads=$t --yield=$y >> lab2_list.csv
+	done
+    done
+done
+
+
+
