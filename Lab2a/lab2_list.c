@@ -69,7 +69,7 @@ void unlock(){
 void threadfunc(void* i){
   int index = *((int*)i);
   
-  for(int j=index; j<index+iterations; j++){
+  for(int j=index; j<iterations; j++){
     lock();
     SortedList_insert(list, &elements[index+j]);
     unlock();
@@ -83,7 +83,7 @@ void threadfunc(void* i){
   }
   unlock();
 
-  for(int j=index; j<index+iterations; j++){
+  for(int j=index; j<iterations; j++){
     lock();
     SortedListElement_t* toDelete = SortedList_lookup(list, elements[j].key);
     unlock();

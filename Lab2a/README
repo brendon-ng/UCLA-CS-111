@@ -4,7 +4,18 @@ ID: 304925492
 
 
 Description of Files:
-
+lab2-add.c: source code for all add functions
+lab2-list.c: source code and driver code for list operations
+SortedList.h: header file for SortedList
+SortedList.c: function implementations for SortedList
+Makefile: File to build, run tests, make tar file, build graphs
+README: This file
+lab2_add.csv: Data for add runs
+lab2_list.csv: Data for list runs
+*.png: Graphs as specified in the spec
+*.gp: Functions to create graphs from csv files
+add_test.sh: Runs test functions for add and appends them to csv
+list_test.sh: Runs test functions for list and appends them to csv
 
 
 Question 2.1.1 - causing conflicts:
