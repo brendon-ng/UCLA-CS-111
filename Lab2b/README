@@ -4,56 +4,70 @@ ID: 304925492
 
 
 Description of Files:
-lab2-add.c: source code for all add functions
 lab2-list.c: source code and driver code for list operations
 SortedList.h: header file for SortedList
 SortedList.c: function implementations for SortedList
-Makefile: File to build, run tests, make tar file, build graphs
+Makefile: File to build, run tests, make tar file, build graphs, profile
 README: This file
-lab2_add.csv: Data for add runs
-lab2_list.csv: Data for list runs
+lab2b_list.csv: Data for all test list runs, comma separated
 *.png: Graphs as specified in the spec
-*.gp: Functions to create graphs from csv files
-add_test.sh: Runs test functions for add and appends them to csv
-list_test.sh: Runs test functions for list and appends them to csv
+graph2b.gp: gnuplot script to create graphs from csv files
+tests.sh: Runs test functions for list operations and appends them to csv file
+profile.out: execution profiling report. Lays out time spent at each point in
+	     the code for the thread function.
 
 
-Question 2.1.1 - causing conflicts:
-It takes many iterations before errors are seen becaue there has to be enough
-iterations to take up multiple threads. If there are not enough iterations,
-only one thread will be used so threads are not stepping on each other's
-toes, even if we initialize more than one thread.
+Question 2.3.1 - CPU time in the basic list implementation:
+The most time in the 1 and 2 thread list tests were spent doing list operations
+since there is not much spinning or waiting to aquire locks since there are not
+many threads fighting for it. The most CPU time could be speant creating the 
+locks and initializing them for smaller amounts of iterations since there will
+be less time speant on list operations but for high iterations, the most CPU
+time will be speant doing list operations. The most expensive parts of the code
+are either spinning waiting for spin locks or context switching or creating
+threads.
+In high-thread spin-lock tests, most of the CPU time iwll be speant spinning
+because most all threads will spin for a while waiting for the lock since there
+are more threads.
+In high-thread mutex ock threads, mos the of CPU time will be spent context
+switching in low iteration tests and in the list operations for high iteration
+tests. In low iteration tests, there are less list operations to do so context
+switches become a larger percentage of the CPU time.
 
-Question 2.1.2 - cost of yielding:
-Yield runs are slower because threads are constantly giving up the CPU causing
-more context switches. These switches slow down the program and add time to the
-process. The additional time is used hault a thread, save its state, load
-another thread's state and restart that new thread. It is not possible to get
-valid per-operation timings if we use --yield because the time used for context
-switches would be in the total time and therefore would cause noise in seeing
-true per-operation times.
+Question 2.3.2 - Execution Profiling:
+With a large number of threads, the most CPU time consuming lines of code are
+taken up by the lock function. The majority of the time is spent waiting for
+a spin lock. 
+The operation becomes so expensive with a high number of threads because there
+are more threads competing for CPU time and therefore more threads spinning and
+waiting for a longer time.
 
-Question 2.1.3 - measurement errors:
-The average cost per operations drops with increasing iterations because the
-average cost per operation is a function of the total time of the program which
-encompasses the time to create the threads which is a very heavy operation.
-The more iterations we have, the more it dilutes this operation and the less
-significance this operation has.
+Question 2.3.3 - Mutex Wait Times
+The average lock-wait times rise so dramatically with the number of contending
+threads because of the competition between threads for locks and to operate on
+the critical section, so more threads are waiting for longer since there is 
+always only one thread allowed to operate on the critical section at a time.
+The completeion time per operations rises less dramatically with the number of 
+threads because more CPU time is spent performing context switches the more
+threads we have. More impactfully though, the more threads we have, the more
+elements we have in our list so we have to iterate through more elements when
+performing adds, lookups, and length calls.
+It's possible for the wait time per operation to go up faster than the 
+completion time per operation because wait time for operation time is measured
+on a per thread basis while operation time is measured from all threads so we 
+can possibly double count some overlapping wait times for operations.
 
-Question 2.1.4 - costs of serialization:
-At low thread values, the options perform similarly because the cost of
-blocking is smaller because there are less threads to wait for. As theads
-increase, the amount of time you have to wait at a critical section increases
-so the operations slow down as theads rise.
-
-Question 2.2.1 - scalability of Mutex
-In both, the time per mutex-protected operation is positiviely correlasted with
-the number of theads. But with lists, it increases at a faster rate. My graph
-shows a decreasing function for list but I am aware it is not supposed to.
-
-Question 2.2.2 - scalability of spin locks
-Time per protected operation is positively correlated with number of threads
-for list operations. The time per protected op increases faster for spin locks
-than mutex. This is because mutex threads go to sleep and wait for a lock while
-spin locks keep spinning, adding overhead. This is why both graphs increase
-but spin locks increase faster.
+Question 2.3.4 - Performance of Partitioned Lists
+The performance of synchronization methods is positively correlated with the 
+number of lists because threads are not fighting for the same resources as they
+are operating on different parts of the list without causing critical sections.
+The throughput should continue to increase as the number of sublists goes up
+since its further reducing the amount that two threads operate on the same 
+section of the list. Eventually, it will be practically never that two threads
+operate on the same sublist, eliminating race conditions and then throughput
+will plateau from there.
+This does not appear to be true. If we use fewer threads, each thread has more
+list operations to perform while if we use a higher amount of partitions, each
+thread has less list operations to perform and therefore a larger critical 
+section. So we see that increasing the number of partitions is more effective 
+then decreasing the number of threads.

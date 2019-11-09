@@ -1,6 +1,8 @@
 #!/bin/bash
 #tests.sh
-
+#NAME: Brendon Ng
+#EMAIL: brendonn8@gmail.com
+# ID: 304925492
 rm -f lab2b_list.csv
 touch lab2b_list.csv
 
