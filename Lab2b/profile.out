@@ -1,15 +1,15 @@
-Total: 1129 samples
-     926  82.0%  82.0%      926  82.0% lock
-     160  14.2%  96.2%      160  14.2% __strcmp_sse42
-      23   2.0%  98.2%      108   9.6% SortedList_insert
-      14   1.2%  99.5%       92   8.1% SortedList_lookup
-       3   0.3%  99.7%        3   0.3% __GI___libc_malloc
-       3   0.3% 100.0%        3   0.3% _init
-       0   0.0% 100.0%     1129 100.0% __clone
-       0   0.0% 100.0%     1129 100.0% start_thread
-       0   0.0% 100.0%     1129 100.0% threadfunc
+Total: 1177 samples
+     974  82.8%  82.8%      974  82.8% lock
+     164  13.9%  96.7%      164  13.9% __strcmp_sse42
+      18   1.5%  98.2%      108   9.2% SortedList_insert
+      16   1.4%  99.6%       93   7.9% SortedList_lookup
+       3   0.3%  99.8%        3   0.3% _init
+       2   0.2% 100.0%        2   0.2% __GI___libc_malloc
+       0   0.0% 100.0%     1177 100.0% __clone
+       0   0.0% 100.0%     1177 100.0% start_thread
+       0   0.0% 100.0%     1177 100.0% threadfunc
 ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_list.c
-     0   1129 Total samples (flat / cumulative)
+     0   1177 Total samples (flat / cumulative)
      .      .   87:   for(int i=0; key[i]!='\0'; i++)
      .      .   88:     sum+= (int)key[i];
      .      .   89:   return sum % lists;
@@ -24,7 +24,7 @@ ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_l
      .      1   97:     char* key = malloc(6*sizeof(char));
      .      .   98:     strcpy(key, elements[j].key);
      .      .   99:     struct Sublist* cur = &sublist_arr[hash(key)];
-     .    477  100:     waitTimes[waitind] += lock(cur);
+     .    478  100:     waitTimes[waitind] += lock(cur);
      .    108  101:     SortedList_insert(cur->list, &elements[j]);
      .      .  102:     unlock(cur);
      .      .  103:   }
@@ -50,11 +50,11 @@ ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_l
      .      .  123:   }
      .      .  124: 
      .      .  125:   for(int j=index; j<endind; j++){
-     .      2  126:     char* key = malloc(6*sizeof(char));
+     .      1  126:     char* key = malloc(6*sizeof(char));
      .      .  127:     strcpy(key, elements[j].key);
      .      .  128:     struct Sublist* cur = &sublist_arr[hash(key)];
-     .    437  129:     waitTimes[waitind] += lock(cur);
-     .     92  130:     SortedListElement_t* toDelete = SortedList_lookup(cur->list, key);
+     .    488  129:     waitTimes[waitind] += lock(cur);
+     .     93  130:     SortedListElement_t* toDelete = SortedList_lookup(cur->list, key);
      .      .  131:     unlock(cur);
      .      .  132:     
      .      .  133:     if(toDelete == NULL){
@@ -63,7 +63,7 @@ ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_l
      .      .  136:       exit(2);
      .      .  137:     }
      .      .  138: 
-     .     12  139:     waitTimes[waitind] += lock(cur);
+     .      8  139:     waitTimes[waitind] += lock(cur);
      .      .  140:     int stat = SortedList_delete(toDelete);
      .      .  141:     unlock(cur);
      .      .  142:     
@@ -82,7 +82,7 @@ ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_l
      .      .  154:   
      .      .  155:   static struct option args[] = {
 ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_list.c
-     0   1129 Total samples (flat / cumulative)
+     0   1177 Total samples (flat / cumulative)
      .      .   87:   for(int i=0; key[i]!='\0'; i++)
      .      .   88:     sum+= (int)key[i];
      .      .   89:   return sum % lists;
@@ -97,7 +97,7 @@ ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_l
      .      1   97:     char* key = malloc(6*sizeof(char));
      .      .   98:     strcpy(key, elements[j].key);
      .      .   99:     struct Sublist* cur = &sublist_arr[hash(key)];
-     .    477  100:     waitTimes[waitind] += lock(cur);
+     .    478  100:     waitTimes[waitind] += lock(cur);
      .    108  101:     SortedList_insert(cur->list, &elements[j]);
      .      .  102:     unlock(cur);
      .      .  103:   }
@@ -123,11 +123,11 @@ ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_l
      .      .  123:   }
      .      .  124: 
      .      .  125:   for(int j=index; j<endind; j++){
-     .      2  126:     char* key = malloc(6*sizeof(char));
+     .      1  126:     char* key = malloc(6*sizeof(char));
      .      .  127:     strcpy(key, elements[j].key);
      .      .  128:     struct Sublist* cur = &sublist_arr[hash(key)];
-     .    437  129:     waitTimes[waitind] += lock(cur);
-     .     92  130:     SortedListElement_t* toDelete = SortedList_lookup(cur->list, key);
+     .    488  129:     waitTimes[waitind] += lock(cur);
+     .     93  130:     SortedListElement_t* toDelete = SortedList_lookup(cur->list, key);
      .      .  131:     unlock(cur);
      .      .  132:     
      .      .  133:     if(toDelete == NULL){
@@ -136,7 +136,7 @@ ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_l
      .      .  136:       exit(2);
      .      .  137:     }
      .      .  138: 
-     .     12  139:     waitTimes[waitind] += lock(cur);
+     .      8  139:     waitTimes[waitind] += lock(cur);
      .      .  140:     int stat = SortedList_delete(toDelete);
      .      .  141:     unlock(cur);
      .      .  142:     
