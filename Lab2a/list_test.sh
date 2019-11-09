@@ -66,3 +66,5 @@ do
     ./lab2_list --iterations=1000 --threads=$t --sync=m >> lab2_list.csv
     ./lab2_list	--iterations=1000 --threads=$t --sync=s	>> lab2_list.csv
 done
+
+echo "done"

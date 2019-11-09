@@ -25,6 +25,7 @@ int opt_yield = 0;
 
 SortedList_t* list;
 SortedListElement_t* elements;
+int numElements;
 
 void handler(int sig){
   if(sig == SIGSEGV){
@@ -37,7 +38,7 @@ void handler(int sig){
 void random_string(char* rstring, int size){
   int i;
   for(i=0; i<size; i++){
-    char randchar = (rand() & 26) + 'a';
+    char randchar = (rand() % 26) + 'a';
     rstring[i] = randchar;
   }
   rstring[i] = '\0';
@@ -67,25 +68,29 @@ void unlock(){
   return;
 }
 void threadfunc(void* i){
-  int index = *((int*)i);
-  
-  for(int j=index; j<iterations; j++){
+  int index = *((int*) i);
+  int endind = index+iterations;
+  for(int j=index; j<endind; j++){
     lock();
-    SortedList_insert(list, &elements[index+j]);
+    SortedList_insert(list, &elements[j]);
     unlock();
   }
 
   lock();
-  if(SortedList_length(list) == -1){
+  int len = SortedList_length(list);
+  unlock();
+
+  if( len == -1){
     fprintf(stderr, "Error in calling SortedList_length! List is corrupted\n");
     fflush(stderr);
     exit(2);
   }
-  unlock();
 
-  for(int j=index; j<iterations; j++){
+  for(int j=index; j<endind; j++){
+    char* key = malloc(6*sizeof(char));
+    strcpy(key, elements[j].key);
     lock();
-    SortedListElement_t* toDelete = SortedList_lookup(list, elements[j].key);
+    SortedListElement_t* toDelete = SortedList_lookup(list, key);
     unlock();
     
     if(toDelete == NULL){
@@ -121,7 +126,7 @@ int main(int argc, char* argv[]){
   threads = 1;
   iterations = 1;
   yield = 0;
-  char yieldstr[5];
+  char* yieldstr = malloc(5*sizeof(char));
 
   int opt;
   while((opt=getopt_long(argc, argv, "", args, NULL)) != -1) {
@@ -153,6 +158,7 @@ int main(int argc, char* argv[]){
 	  fprintf(stderr, "Error: invalid yield argument %c- usage: --yield=[idl]\n", optarg[i]);
 	  fflush(stderr);
 	  exit(1);
+	  break;
 	}
       }
       strcpy(yieldstr, optarg);
@@ -177,10 +183,10 @@ int main(int argc, char* argv[]){
 
   //Initialize List Elements
   srand(time(NULL));
-  int numElements = threads * iterations;
+  numElements = threads * iterations;
   elements = malloc(numElements * sizeof(SortedListElement_t));
   for(int i=0; i<numElements; i++){
-    char rstring[6];
+    char* rstring = malloc(6*sizeof(char));
     random_string(rstring, 5);
     elements[i].key = rstring; 
   }
@@ -190,8 +196,8 @@ int main(int argc, char* argv[]){
   clock_gettime(CLOCK_MONOTONIC, &start_time);
   long long start = (start_time.tv_sec * 1000000000) + start_time.tv_nsec;
 
-  pthread_t thread_arr[threads];
-  int indexes[threads];
+  pthread_t* thread_arr = malloc(threads* sizeof(pthread_t));
+  int* indexes = malloc(threads * sizeof(int));
   for(int i=0; i<threads; i++){
     indexes[i] = i*iterations;
   }
@@ -228,7 +234,7 @@ int main(int argc, char* argv[]){
   //Print CSV record
   if(yield==0)
     strcpy(yieldstr, "none");
-  char syncstr[5];
+  char* syncstr = malloc(5* sizeof(char));
   if(sync == NO_LOCK)
     strcpy(syncstr, "none");
   else{
@@ -245,5 +251,7 @@ int main(int argc, char* argv[]){
 
   free(list);
   free(elements);
+  free(thread_arr);
+  free(indexes);
   exit(0);
 }

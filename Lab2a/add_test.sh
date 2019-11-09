@@ -26,3 +26,5 @@ do
         ./lab2_add --iterations=$i --threads=$t --yield --sync=c >> lab2_add.csv
     done
 done
+
+echo "done"

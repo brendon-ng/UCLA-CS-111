@@ -10,10 +10,10 @@ build: lab2_add.c SortedList.c
 	$(CC) $(CFLAGS) -o lab2_list SortedList.c SortedList.h lab2_list.c
 
 tests: build
-	@-./add_test.sh
-	@-./list_test.sh
+	./add_test.sh
+	./list_test.sh
 
-graphs: build tests
+graphs: tests
 	gnuplot lab2_add.gp
 	gnuplot lab2_list.gp
 
