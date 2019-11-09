@@ -1,0 +1,156 @@
+Total: 1129 samples
+     926  82.0%  82.0%      926  82.0% lock
+     160  14.2%  96.2%      160  14.2% __strcmp_sse42
+      23   2.0%  98.2%      108   9.6% SortedList_insert
+      14   1.2%  99.5%       92   8.1% SortedList_lookup
+       3   0.3%  99.7%        3   0.3% __GI___libc_malloc
+       3   0.3% 100.0%        3   0.3% _init
+       0   0.0% 100.0%     1129 100.0% __clone
+       0   0.0% 100.0%     1129 100.0% start_thread
+       0   0.0% 100.0%     1129 100.0% threadfunc
+ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_list.c
+     0   1129 Total samples (flat / cumulative)
+     .      .   87:   for(int i=0; key[i]!='\0'; i++)
+     .      .   88:     sum+= (int)key[i];
+     .      .   89:   return sum % lists;
+     .      .   90: }
+     .      .   91: 
+---
+     .      .   92: void threadfunc(void* i){
+     .      .   93:   int index = *((int*) i);
+     .      .   94:   int endind = index+iterations;
+     .      .   95:   int waitind = index/iterations;
+     .      .   96:   for(int j=index; j<endind; j++){
+     .      1   97:     char* key = malloc(6*sizeof(char));
+     .      .   98:     strcpy(key, elements[j].key);
+     .      .   99:     struct Sublist* cur = &sublist_arr[hash(key)];
+     .    477  100:     waitTimes[waitind] += lock(cur);
+     .    108  101:     SortedList_insert(cur->list, &elements[j]);
+     .      .  102:     unlock(cur);
+     .      .  103:   }
+     .      .  104: 
+     .      .  105:   int totLen = 0;
+     .      .  106:   for(int j=0; j<lists; j++){
+     .      .  107:     waitTimes[waitind] += lock(&sublist_arr[j]);
+     .      .  108:     int len = SortedList_length(sublist_arr[j].list);
+     .      .  109:     totLen+=len;
+     .      .  110:     unlock(&sublist_arr[j]);
+     .      .  111: 
+     .      .  112:     if( len == -1){
+     .      .  113:       fprintf(stderr, "Error in calling SortedList_length! List is corrupted\n");
+     .      .  114:       fflush(stderr);
+     .      .  115:       exit(2);
+     .      .  116:     }
+     .      .  117:   }
+     .      .  118: 
+     .      .  119:   if(totLen < 0){
+     .      .  120:     fprintf(stderr,"Error: Total of sublist lengths is negative! Length:%d\n",totLen);
+     .      .  121:     fflush(stderr);
+     .      .  122:     exit(2);
+     .      .  123:   }
+     .      .  124: 
+     .      .  125:   for(int j=index; j<endind; j++){
+     .      2  126:     char* key = malloc(6*sizeof(char));
+     .      .  127:     strcpy(key, elements[j].key);
+     .      .  128:     struct Sublist* cur = &sublist_arr[hash(key)];
+     .    437  129:     waitTimes[waitind] += lock(cur);
+     .     92  130:     SortedListElement_t* toDelete = SortedList_lookup(cur->list, key);
+     .      .  131:     unlock(cur);
+     .      .  132:     
+     .      .  133:     if(toDelete == NULL){
+     .      .  134:       fprintf(stderr,"Error in SortedList_lookup! cannot find element with key '%s'\n", elements[j].key);
+     .      .  135:       fflush(stderr);
+     .      .  136:       exit(2);
+     .      .  137:     }
+     .      .  138: 
+     .     12  139:     waitTimes[waitind] += lock(cur);
+     .      .  140:     int stat = SortedList_delete(toDelete);
+     .      .  141:     unlock(cur);
+     .      .  142:     
+     .      .  143:     if(stat){
+     .      .  144:       fprintf(stderr, "Error deleting element! List is corrupt\n");
+     .      .  145:       fflush(stderr);
+     .      .  146:       exit(2);
+     .      .  147:     }
+     .      .  148:   }
+     .      .  149:   return;
+     .      .  150: }
+---
+     .      .  151: 
+     .      .  152: int main(int argc, char* argv[]){
+     .      .  153:   signal(SIGSEGV, handler);
+     .      .  154:   
+     .      .  155:   static struct option args[] = {
+ROUTINE ====================== threadfunc in /u/cs/ugrad/tetsuo/111/Lab2b/lab2_list.c
+     0   1129 Total samples (flat / cumulative)
+     .      .   87:   for(int i=0; key[i]!='\0'; i++)
+     .      .   88:     sum+= (int)key[i];
+     .      .   89:   return sum % lists;
+     .      .   90: }
+     .      .   91: 
+---
+     .      .   92: void threadfunc(void* i){
+     .      .   93:   int index = *((int*) i);
+     .      .   94:   int endind = index+iterations;
+     .      .   95:   int waitind = index/iterations;
+     .      .   96:   for(int j=index; j<endind; j++){
+     .      1   97:     char* key = malloc(6*sizeof(char));
+     .      .   98:     strcpy(key, elements[j].key);
+     .      .   99:     struct Sublist* cur = &sublist_arr[hash(key)];
+     .    477  100:     waitTimes[waitind] += lock(cur);
+     .    108  101:     SortedList_insert(cur->list, &elements[j]);
+     .      .  102:     unlock(cur);
+     .      .  103:   }
+     .      .  104: 
+     .      .  105:   int totLen = 0;
+     .      .  106:   for(int j=0; j<lists; j++){
+     .      .  107:     waitTimes[waitind] += lock(&sublist_arr[j]);
+     .      .  108:     int len = SortedList_length(sublist_arr[j].list);
+     .      .  109:     totLen+=len;
+     .      .  110:     unlock(&sublist_arr[j]);
+     .      .  111: 
+     .      .  112:     if( len == -1){
+     .      .  113:       fprintf(stderr, "Error in calling SortedList_length! List is corrupted\n");
+     .      .  114:       fflush(stderr);
+     .      .  115:       exit(2);
+     .      .  116:     }
+     .      .  117:   }
+     .      .  118: 
+     .      .  119:   if(totLen < 0){
+     .      .  120:     fprintf(stderr,"Error: Total of sublist lengths is negative! Length:%d\n",totLen);
+     .      .  121:     fflush(stderr);
+     .      .  122:     exit(2);
+     .      .  123:   }
+     .      .  124: 
+     .      .  125:   for(int j=index; j<endind; j++){
+     .      2  126:     char* key = malloc(6*sizeof(char));
+     .      .  127:     strcpy(key, elements[j].key);
+     .      .  128:     struct Sublist* cur = &sublist_arr[hash(key)];
+     .    437  129:     waitTimes[waitind] += lock(cur);
+     .     92  130:     SortedListElement_t* toDelete = SortedList_lookup(cur->list, key);
+     .      .  131:     unlock(cur);
+     .      .  132:     
+     .      .  133:     if(toDelete == NULL){
+     .      .  134:       fprintf(stderr,"Error in SortedList_lookup! cannot find element with key '%s'\n", elements[j].key);
+     .      .  135:       fflush(stderr);
+     .      .  136:       exit(2);
+     .      .  137:     }
+     .      .  138: 
+     .     12  139:     waitTimes[waitind] += lock(cur);
+     .      .  140:     int stat = SortedList_delete(toDelete);
+     .      .  141:     unlock(cur);
+     .      .  142:     
+     .      .  143:     if(stat){
+     .      .  144:       fprintf(stderr, "Error deleting element! List is corrupt\n");
+     .      .  145:       fflush(stderr);
+     .      .  146:       exit(2);
+     .      .  147:     }
+     .      .  148:   }
+     .      .  149:   return;
+     .      .  150: }
+---
+     .      .  151: 
+     .      .  152: int main(int argc, char* argv[]){
+     .      .  153:   signal(SIGSEGV, handler);
+     .      .  154:   
+     .      .  155:   static struct option args[] = {
