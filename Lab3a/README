@@ -3,3 +3,11 @@ EMAIL: brendonn8@gmail.com
 ID: 304925492
 
 Description of Included Files
+
+lab3a.c: C source code that contains the program specified in the spec. Reads file system and analyzes.
+
+Makefile: Compiles program, creates tarball, and cleans created files.
+
+ext2_fs.h: simple header for the EXT2 file system. Included in lab3a.c
+
+README: This file.

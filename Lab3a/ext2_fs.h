@@ -177,3 +177,4 @@ struct ext2_dir_entry {
 	__u8	name_len;		/* name length	*/
 	__u8	file_type;		/* file type */
 	char	name[EXT2_NAME_LEN];	/* File name */
+};

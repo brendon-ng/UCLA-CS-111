@@ -2,7 +2,7 @@
 # EMAIL: brendonn8@gmail.com
 # ID: 304925492
 
-CC = gcc
+CC=gcc
 CFLAGS = -Wall -Wextra -g
 
 default: lab3a.c
