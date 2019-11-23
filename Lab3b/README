@@ -5,3 +5,6 @@ ID: 304925492
 Description of Included Files
 
 README: This file
+lab3b.py: The source code for my program where everything happens. Can run this directly but we copy it
+	  to create an executable lab3b
+Makefile: creates executable and tar file
