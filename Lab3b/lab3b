@@ -5,7 +5,6 @@ import csv
 from collections import defaultdict
 
 superBlock = None
-groups = []
 bfree = []
 ifree = []
 inodes = []
@@ -19,21 +18,10 @@ class SuperBlock:
    def __init__(self, row):
       self.n_blocks = int(row[1])
       self.n_inodes = int(row[2])
-      self.s_block = int(row[3])
-      self.s_inode = int(row[4])
       self.blocks= int(row[5])
       self.inodes= int(row[6])
-      self.firstInode =int(row[5])
-      self.s_table = self.n_inodes*self.s_inode / self.s_block + 1
-      self.firstBlock = self.s_table + 4
-
-class Group:
-   def __init__(self, row):
-      self.num = int(row[1])
-      self.n_blocks = int(row[2])
-      self.n_inodes = int(row[3])
-      self.n_bfree = int(row[4])
-      self.n_ifree = int(row[5])
+      self.firstInode =int(row[7])
+      self.firstBlock = self.n_inodes*int(row[4]) / int(row[3]) + 1 + 4
 
 class Inode:
    def __init__(self, row):
@@ -52,7 +40,6 @@ class Inode:
       self.singleIndirect = int(row[24])
       self.doubleIndirect = int(row[25])
       self.tripleIndirect = int(row[26])
-
 class Dirent:
    def __init__(self,row):
       self.parent = int(row[1])
@@ -116,7 +103,7 @@ if __name__ == '__main__':
       if type == "SUPERBLOCK":
          superBlock = SuperBlock(row);
       elif type == "GROUP":
-         groups.append(Group(row))
+         continue
       elif type == "BFREE":
          bfree.append(int(row[1]))
       elif type == "IFREE":
@@ -130,8 +117,6 @@ if __name__ == '__main__':
       else:
          sys.stderr.write("Error: Invalid entry type in csv file: %s\n" % type)
          exit(1)
-
-
 
    for inode in inodes:
       if inode.fileType == 's' and inode.s_file <= 60:
@@ -179,10 +164,47 @@ if __name__ == '__main__':
             unallocated.append(inode.num)
       for i in range(superBlock.firstInode, superBlock.n_inodes):
          if i not in ifree:
-            for inode in inodes:
-               if inode.num == i:
-                  continue
-            print("UNALLOCATED INODE " + str(i) + " NOT ON FREELIST")
-            unallocated.append(i)
-            exit_stat=2
+            cont = False
+            for j_inode in inodes:
+               if j_inode.num == i:
+                  cont = True
+            if not cont:
+               print("UNALLOCATED INODE " + str(i) + " NOT ON FREELIST")
+               unallocated.append(i)
+               exit_stat=2
+
+   links = {}
+   parents = {2:2}
+   for dirent in dirents:
+      if dirent.inode > superBlock.n_inodes:
+         print("DIRECTORY INODE "+str(dirent.parent)+" NAME "+str(dirent.name)+" INVALID INODE "+str(dirent.inode))
+         exit_stat = 2
+      elif dirent.inode in unallocated:
+         print("DIRECTORY INODE "+str(dirent.parent)+" NAME "+str(dirent.name)+" UNALLOCATED INODE "+str(dirent.inode))
+         exit_stat =2
+      else:
+         links[dirent.inode] = (links.get(dirent.inode, 0) + 1)
+
+      if dirent.inode <= superBlock.n_inodes and dirent.inode not in unallocated:
+         if dirent.name != "'.'" and dirent.name != "'..'":
+            parents[dirent.inode] = dirent.parent
+         elif dirent.name == "'.'" and dirent.inode != dirent.parent:
+            print("DIRECTORY INODE " + str(dirent.parent)+" NAME '.' LINK TO INODE "+str(dirent.inode)+" SHOULD BE" + dirent.parent)
+            exit_stat = 2
+
+   for dirent in dirents:
+      if dirent.name == "'..'" and parents[dirent.parent] != dirent.inode:
+         print("DIRECTORY INODE "+str(dirent.parent)+" NAME '..' LINK TO INODE "+str(dirent.inode)+" SHOULD BE "+str(parents[dirent.parent]))
+         exit_stat = 2
+
+   for alloc in allocated:
+      if links.get(alloc.num, 0) != alloc.links:
+         print("INODE " + str(alloc.num)+" HAS "+str(links.get(alloc.num,0))+" LINKS BUT LINKCOUNT IS "+str(alloc.links))
+         exit_stat =2
+
+   
+
+
+   
+         
    exit(exit_stat)

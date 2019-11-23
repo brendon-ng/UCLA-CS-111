@@ -5,7 +5,6 @@ import csv
 from collections import defaultdict
 
 superBlock = None
-groups = []
 bfree = []
 ifree = []
 inodes = []
@@ -19,35 +18,17 @@ class SuperBlock:
    def __init__(self, row):
       self.n_blocks = int(row[1])
       self.n_inodes = int(row[2])
-      self.s_block = int(row[3])
-      self.s_inode = int(row[4])
       self.blocks= int(row[5])
       self.inodes= int(row[6])
       self.firstInode =int(row[7])
-      self.s_table = self.n_inodes*self.s_inode / self.s_block + 1
-      self.firstBlock = self.s_table + 4
-
-class Group:
-   def __init__(self, row):
-      self.num = int(row[1])
-      self.n_blocks = int(row[2])
-      self.n_inodes = int(row[3])
-      self.n_bfree = int(row[4])
-      self.n_ifree = int(row[5])
+      self.firstBlock = self.n_inodes*int(row[4]) / int(row[3]) + 1 + 4
 
 class Inode:
    def __init__(self, row):
       self.num = int(row[1])
       self.fileType = row[2]
-      self.mode = int(row[3])
-      self.owner = int(row[4])
-      self.group = int(row[5])
       self.links = int(row[6])
-      self.ctime = row[7]
-      self.mtime = row[8]
-      self.atime = row[9]
       self.s_file = int(row[10])
-      self.n_blocks = int(row[11])
       self.directBlocks = map(int, row[12:24])
       self.singleIndirect = int(row[24])
       self.doubleIndirect = int(row[25])
@@ -57,8 +38,6 @@ class Dirent:
       self.parent = int(row[1])
       self.offset = int(row[2])
       self.inode = int(row[3])
-      self.l_entry = int(row[4])
-      self.l_name = int(row[5])
       self.name = row[6]
 
 class Indirect:
@@ -115,7 +94,7 @@ if __name__ == '__main__':
       if type == "SUPERBLOCK":
          superBlock = SuperBlock(row);
       elif type == "GROUP":
-         groups.append(Group(row))
+         continue
       elif type == "BFREE":
          bfree.append(int(row[1]))
       elif type == "IFREE":
