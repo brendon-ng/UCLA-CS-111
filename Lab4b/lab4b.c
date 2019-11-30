@@ -4,6 +4,8 @@
 
 #ifdef DUMMY
 int dum = 0;
+#define TEMP_PIN 1
+#define BUTTON_PIN 60
 #define MRAA_GPIO_IN 0
 #define MRAA_SUCCESS 0
 #define MRAA_GPIO_EDGE_RISING 0
@@ -35,6 +37,8 @@ int mraa_gpio_isr(mraa_gpio_context c, int d, void* ptr, void* idk){
 #else
 #include <mraa.h>
 #include <mraa/aio.h>
+#define TEMP_PIN 2
+#define BUTTON_PIN 71
 #endif
 
 #include <stdio.h>
@@ -159,13 +163,13 @@ int main(int argc, char** argv){
 	}
 
 	//initialize sensors
-	temp = mraa_aio_init(2);
+	temp = mraa_aio_init(TEMP_PIN);
 	if(temp == NULL){
 		fprintf(stderr, "Error initializing temperature sensor\n");
 		mraa_deinit();
 		exit(1);
 	}
-	button = mraa_gpio_init(71);
+	button = mraa_gpio_init(BUTTON_PIN);
 	if(button == NULL){
 		fprintf(stderr, "Error initializing button\n");
 		mraa_deinit();
