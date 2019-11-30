@@ -30,7 +30,7 @@ struct timeval now;
 float getTemp(){
 	const int B = 4275;
 	const int R0 = 100000;
-	int reading = mraa_aio_read(temp);
+	float reading = mraa_aio_read(temp);
 	float R = 1023.0/reading - 1.0;
 	R = R0*R;
 	float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15;
@@ -190,7 +190,7 @@ int main(int argc, char** argv){
 				perform_command(command);
 				free(command);
 				command = malloc(sizeof(char));
-				com_size = 1;
+				com_size = 0;
 			}
 			else{
 				command[com_size] = *buf;
@@ -218,7 +218,7 @@ int main(int argc, char** argv){
 
 	}
 
-	shutdown();
+	
 
 	mraa_aio_close(temp);
 	mraa_gpio_close(button);
