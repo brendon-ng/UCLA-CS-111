@@ -8,11 +8,7 @@ Wifi MAC address: 2CF7F106786C
 
 Description of included files:
 
-my_beaglebone.jpg: a picture of me holding my assembled Beaglebone
-connected.png: Screenshot showing the new name and network access
-copy.png: Sceenshot showing copy of hello world program from laptop to Beaglebone
-build_run.png: Screenshot of the build and run of my hello world program
-git.png: Screenshot showing the installation of git and the git clone of my
-	 CS111 repository
+lab4b.c: Source code for all required tasks including reading temperature from
+	 sensor on Beaglebone.
 Makefile: To build the tar file
 README: This file
