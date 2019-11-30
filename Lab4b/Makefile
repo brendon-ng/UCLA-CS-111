@@ -6,7 +6,12 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g -lm -lmraa
 
 default:
-	$(CC) $(CFLAGS) -o lab4b lab4b.c
+	echo `uname -a` | grep beaglebone;\
+	if [ $$? -eq 0 ]; then \
+		$(CC) $(CFLAGS) -o lab4b lab4b.c; \
+	else \
+		$(CC) $(CFLAGS) -DDUMMY -o lab4b lab4b.c; \
+	fi;
 check: default
 	errors=0; \
 	{ echo "START"; sleep 2; echo "SCALE=F"; sleep 1; echo "PERIOD=2"; sleep 1; echo "STOP"; sleep 1; echo "OFF"; } | ./lab4b --log=test.txt --scale=C; \
@@ -52,12 +57,8 @@ check: default
 	if [ $$errors -eq 0 ]; then \
 		echo "PASSES MAKE CHECK";\
 	fi;
-
-
-
-		
 dist:
 	tar -czf lab4b-304925492.tar.gz lab4b.c Makefile README
 clean:
 	rm -f lab4b *.tar.gz *.o *~
-	
+

@@ -2,11 +2,24 @@
 //EMAIL: brendonn8@gmail.com
 //ID: 304925492
 
+#ifdef DUMMY
+#define MRAA_GPIO_IN 0
+typedef int mraa_aio_context;
+typedef int mraa_gpio_context;
+int mraa_aio_read(mraa_aio_context c){
+  return 650;
+}
+void mraa_aio_close(mraa_aio_context c){}
+
+#else
+#include <mraa.h>
+#include <mraa/aio.h>
+#endif
+
 #include <stdio.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mraa.h>
 #include <poll.h> 
 #include <math.h> 
 #include <sys/time.h> 
