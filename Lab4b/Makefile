@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g -lm
 
 default:
-	echo `uname -a` | grep 304925492;\
+	echo `uname -a` | grep 304925492\.lasr\.cs\.ucla\.edu;\
 	if [ $$? -eq 0 ]; then \
 		$(CC) $(CFLAGS) -lmraa -o lab4b lab4b.c; \
 	else \
