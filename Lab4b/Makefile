@@ -3,14 +3,14 @@
 # ID: 304925492
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -lm -lmraa
+CFLAGS = -Wall -Wextra -g -lm
 
 default:
-	echo `uname -a` | grep beaglebone;\
+	echo `uname -a` | grep 304925492;\
 	if [ $$? -eq 0 ]; then \
-		$(CC) $(CFLAGS) -o lab4b lab4b.c; \
+		$(CC) $(CFLAGS) -lmraa -o lab4b lab4b.c; \
 	else \
-		$(CC) $(CFLAGS) -DDUMMY -o lab4b lab4b.c; \
+		$(CC) $(CFLAGS) -Wno-unused-parameter -DDUMMY -o lab4b lab4b.c; \
 	fi;
 check: default
 	errors=0; \

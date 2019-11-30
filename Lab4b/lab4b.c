@@ -3,13 +3,34 @@
 //ID: 304925492
 
 #ifdef DUMMY
+int dum = 0;
 #define MRAA_GPIO_IN 0
-typedef int mraa_aio_context;
-typedef int mraa_gpio_context;
+#define MRAA_SUCCESS 0
+#define MRAA_GPIO_EDGE_RISING 0
+typedef int* mraa_aio_context;
+typedef int* mraa_gpio_context;
 int mraa_aio_read(mraa_aio_context c){
   return 650;
 }
-void mraa_aio_close(mraa_aio_context c){}
+void mraa_aio_close(mraa_aio_context c){
+
+}
+void mraa_gpio_close(mraa_gpio_context c){
+}
+int* mraa_aio_init(int c){
+  return &dum;
+}
+void mraa_deinit(){}
+int* mraa_gpio_init(int c){
+  return &dum;
+}
+int mraa_gpio_dir(mraa_gpio_context c, int d){
+  return 0;
+}
+int mraa_gpio_isr(mraa_gpio_context c, int d, void* ptr, void* idk){
+  return 0;
+}
+
 
 #else
 #include <mraa.h>
