@@ -3,18 +3,16 @@
 //ID: 304925492
 
 #include <stdio.h>
-#include <getopt.h> //for getopt_long(3)
-#include <stdlib.h> //for atoi
-#include <string.h> //for atoi
+#include <getopt.h>
+#include <stdlib.h>
+#include <string.h>
 #include <mraa.h>
-#include <poll.h> //for poll
-#include <math.h> //for log
-#include <sys/time.h> //gettimeofday(2)
-#include <time.h> //localtime()
-#include <sys/types.h> //open(2)
-#include <sys/stat.h> //open(2)
-#include <fcntl.h> //open(2)
-#include <unistd.h> //write(2)
+#include <poll.h> 
+#include <math.h> 
+#include <sys/time.h> 
+#include <time.h>
+#include <fcntl.h>
+#include <unistd.h> 
 
 
 int period = 1;
@@ -25,8 +23,6 @@ int started = 1;
 mraa_aio_context temp;
 mraa_gpio_context button;
 
-struct timeval now;
-
 float getTemp(){
 	const int B = 4275;
 	const int R0 = 100000;
@@ -35,12 +31,12 @@ float getTemp(){
 	R = R0*R;
 	float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15;
 	if(scale == 'F')
-		return (temperature * 9/5) + 32;
+		return (temperature * 9.0/5.0) + 32.0;
 	else if (scale == 'C')
 		return temperature;
 	else{
 		fprintf(stderr, "Invalid scale\n");
-	exit(1);
+		exit(1);
 	}
 }
 
@@ -63,8 +59,6 @@ void shutdown(){
 		}
 	}
 
-//	mraa_aio_close(temp);
-//	mraa_gpio_close(button);
 	exit(0);
 }
 
@@ -131,7 +125,7 @@ int main(int argc, char** argv){
 	}
 
 	//initialize sensors
-	temp = mraa_aio_init(1);
+	temp = mraa_aio_init(2);
 	if(temp == NULL){
 		fprintf(stderr, "Error initializing temperature sensor\n");
 		mraa_deinit();
@@ -218,9 +212,5 @@ int main(int argc, char** argv){
 
 	}
 
-	
-
-	mraa_aio_close(temp);
-	mraa_gpio_close(button);
 	exit(0);
 }
