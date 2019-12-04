@@ -1,0 +1,14 @@
+NAME: Brendon Ng
+EMAIL: brendonn8@gmail.com
+ID: 304925492
+
+
+Serial Number: BBGW18031133
+Wifi MAC address: 2CF7F106786C
+
+Description of included files:
+
+lab4b.c: Source code for all required tasks including reading temperature from
+	 sensor on Beaglebone.
+Makefile: To build the tar file
+README: This file
