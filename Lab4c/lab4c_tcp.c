@@ -78,13 +78,13 @@ void shut_down(){
 	if(log_bool){
 		if(write(logFile, report, strlen(report)) < 0){
 			fprintf(stderr, "Error writing shutdown to logfile\n");
-			exit(1);
+			exit(2);
 		}
 	}
 
 	if(write(sock, report, strlen(report)) < 0){
 		fprintf(stderr, "Error writing shutdown to socket\n");
-		exit(1);
+		exit(2);
 	}
 
 	exit(0);
@@ -155,6 +155,10 @@ int main(int argc, char** argv){
 			case 'i':
 				id = optarg;
 				id_present = 1;
+				if(strlen(id) != 9){
+					fprintf(stderr, "Error: ID must be length 9!\n");
+					exit(1);
+				}
 				break;
 			case 'h':
 				host = optarg;
@@ -178,7 +182,7 @@ int main(int argc, char** argv){
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(sock < 0){
 		fprintf(stderr, "Error creating socket\n");
-		exit(1);
+		exit(2);
 	}
 
 	struct hostent* server = gethostbyname(host);
@@ -202,11 +206,11 @@ int main(int argc, char** argv){
 	sprintf(id_str, "ID=%s\n", id);
 	if(write(logFile, id_str, strlen(id_str)) < 0){
 			fprintf(stderr, "Error: Could not write ID to logfile\n");
-			exit(1);
+			exit(2);
 	}
 	if(write(sock, id_str, strlen(id_str)) < 0){
 			fprintf(stderr, "Error: Could not write ID to socket\n");
-			exit(1);
+			exit(2);
 	}
 
 
@@ -217,7 +221,7 @@ int main(int argc, char** argv){
 	if(temp == NULL){
 		fprintf(stderr, "Error initializing temperature sensor\n");
 		mraa_deinit();
-		exit(1);
+		exit(2);
 	}
 	
 	char* command = malloc(sizeof(char));
@@ -234,13 +238,13 @@ int main(int argc, char** argv){
 		int poll_stat = poll(fds, 1, 0);
 		if(poll_stat == -1){
 			fprintf(stderr, "Error with poll\n");
-			exit(1);
+			exit(2);
 		}
 		if(poll_stat > 0){
 			char buf[1];
 			if(read(sock, buf, 1) < 0){
 				fprintf(stderr, "Error reading stdin\n");
-				exit(1);
+				exit(2);
 			}
 
 			if(*buf == '\n'){
@@ -273,11 +277,11 @@ int main(int argc, char** argv){
 			if(log_bool){
 				if(write(logFile, report, strlen(report))<0){
 					fprintf(stderr, "Error writing temp report\n");
-					exit(1);
+					exit(2);
 				}
 				if(write(sock, report, strlen(report))<0){
 					fprintf(stderr, "Error writing temp report to socket\n");
-					exit(1);
+					exit(2);
 				}
 			}
 			gettimeofday(&last, NULL);
