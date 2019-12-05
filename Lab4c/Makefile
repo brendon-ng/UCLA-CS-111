@@ -3,10 +3,10 @@
 # ID: 304925492
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -lm
+CFLAGS = -Wall -Wextra -g -lm -Wno-deprecated-declarations
 
 default:
-	echo `uname -a` | grep -e beaglebone -e 304925492\.lasr\.cs\.ucla\.edu;\
+	echo `uname -r` | grep -e beaglebone -e 4\.14\.71 ;\
 	if [ $$? -eq 0 ]; then \
 		$(CC) $(CFLAGS) -lmraa -o lab4c_tcp lab4c_tcp.c; \
 		$(CC) $(CFLAGS) -lmraa -lssl -lcrypto -o lab4c_tls lab4c_tls.c; \
