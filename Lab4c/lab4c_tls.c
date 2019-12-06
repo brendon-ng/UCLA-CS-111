@@ -19,8 +19,7 @@ void mraa_deinit(){}
 #else
 #include <mraa.h>
 #include <mraa/aio.h>
-#define TEMP_PIN 2
-#define BUTTON_PIN 71
+#define TEMP_PIN 1
 #endif
 
 #include <stdio.h>
